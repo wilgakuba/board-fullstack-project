@@ -6,10 +6,11 @@ const fs = require('fs');
 exports.register = async (req, res) => {
 	try {	
 		
-		const { login, password, phoneNumber, avatar } = req.body;
-		console.log(req.body, req.file);
+		const { login, password, phoneNumber } = req.body;
+
 		const fileType = req.file ? await getImageFileType(req.file) : 'unknown';
 		if (login && typeof login === 'string' && password && typeof password === 'string' && req.file && ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'].includes(fileType)) {
+
 			const userWithLogin = await User.findOne({ login });
 			if (userWithLogin) {
 				fs.unlinkSync(`./public/uploads/${req.file.filename}`);
@@ -52,14 +53,10 @@ exports.login = async (req, res) => {
 	} catch (err) {
 		res.status(500).send({ message: err.message });
 	}
-
 }
 
-
-
-
 exports.getUser = async (req, res) => {
-	res.send('Yeah! I\'m Logged');
+	res.send({ message: 'Yeah, I\'m logged'})
 };
 
 exports.logout = async (req, res) => {

@@ -12,6 +12,11 @@ const app = express();
 const SECRET = process.env.SECRET;
 const NODE_ENV = process.env.NODE_ENV;
 
+const PORT = process.env.PORT || 8000;
+const server = app.listen(PORT, () => {
+  console.log(`Server is running on port: ${PORT}`);
+});
+
 
 mongoose.connect('mongodb://localhost:27017/adsDB', {
   useNewUrlParser: true,
@@ -53,15 +58,12 @@ db.once('open', () => {
   
   app.use('/api', require('./routes/ads.routes'));
   app.use('/api', require('./routes/user.routes'));
-  app.use('/auth', require('./routes/auth.routes'));
+  app.use('/api/auth', require('./routes/auth.routes'));
+  
+
   
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '/client/build/index.html'));
   });
   
-  
-  const PORT = process.env.PORT || 8000;
-  const server = app.listen(PORT, () => {
-    console.log(`Server is running on port: ${PORT}`);
-  });
 });
