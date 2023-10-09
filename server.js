@@ -11,6 +11,8 @@ const app = express();
 
 const SECRET = process.env.SECRET;
 const NODE_ENV = process.env.NODE_ENV;
+const dbConnectionString = process.env.DB_CONNECTION_STRING;
+
 
 const PORT = process.env.PORT || 8000;
 const server = app.listen(PORT, () => {
@@ -18,9 +20,10 @@ const server = app.listen(PORT, () => {
 });
 
 
-mongoose.connect('mongodb://localhost:27017/adsDB', {
+mongoose.connect( dbConnectionString, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  dbName: 'adsDB',
 });
 
 const db = mongoose.connection;
@@ -32,7 +35,7 @@ db.once('open', () => {
   app.use(
     session({
       secret: SECRET,
-      store: MongoStore.create({ mongoUrl: 'mongodb://localhost:27017/adsDB' }),
+      store: MongoStore.create({ mongoUrl: dbConnectionString }),
       resave: false,
       saveUninitialized: false,
       cookie: {
